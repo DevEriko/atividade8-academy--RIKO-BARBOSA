@@ -12,12 +12,10 @@ export default class CadastroPage {
     mensagemFalhaNoCadastro = '.modal-body > h3'
     mensagemNaoCadastrou = '.error-message'
 
-    mensaNomeObrigatorio = ':nth-child(1) > .input-error'
-    mensaEmailObrigatorio = ':nth-child(2) > .input-error'
-    mensaSenhaObrigatorio = ':nth-child(3) > .input-error'
-    mensaConfirmaSenhaObrigatorio = ':nth-child(4) > .input-error'
-
-
+    labelErroNome = ':nth-child(1) > .input-error'
+    labelErroEmail = ':nth-child(2) > .input-error'
+    labelErroSenha = ':nth-child(3) > .input-error'
+    labelErroConfSenha = ':nth-child(4) > .input-error'
 
     typeNome(nome) {
         cy.get(this.inputNome).type(nome);

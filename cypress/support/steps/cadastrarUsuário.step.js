@@ -68,14 +68,35 @@ When('não informar um novo nome válido', function () { });
 When('não informar um novo e-mail válido', function () { });
 When('não informar a senha', function () { });
 When('não informar a confirmação de senha', function () { });
-Then('o usuário deverá as mensagens dos campos obrigatórios', function () {
-    cy.get(paginaCadastro.mensaNomeObrigatorio).should('contain', 'Informe o nome')
-    cy.get(paginaCadastro.mensaEmailObrigatorio).should('contain', 'Informe o e-mail')
-    cy.get(paginaCadastro.mensaSenhaObrigatorio).should('contain', 'Informe a senha')
-    cy.get(paginaCadastro.mensaConfirmaSenhaObrigatorio).should('contain', 'Informe a senha')
+Then('o usuário deverá ver as mensagens dos campos obrigatórios e não será cadastrado', function () {
+    cy.get(paginaCadastro.labelErroNome).should('contain', 'Informe o nome')
+    cy.get(paginaCadastro.labelErroEmail).should('contain', 'Informe o e-mail')
+    cy.get(paginaCadastro.labelErroSenha).should('contain', 'Informe a senha')
+    cy.get(paginaCadastro.labelErroConfSenha).should('contain', 'Informe a senha')
 
 })
 
+When('informar um novo nome com mais de 101 caracteres', function () {
+    const nome = Cypress._.repeat('ha', 51);
+    paginaCadastro.typeNome(nome);
+})
+
+When('informar um novo e-mail com 56 caracteres', function () {
+    const email = Cypress._.repeat('ha', 28);
+    paginaCadastro.typeEmail(email);
+})
+
+When('informar a confirmação de senha com uma senha diferente', function () {
+    paginaCadastro.typeConfirmaSenha('456789');
+})
+
+When('informar a senha com 5 dígitos', function () {
+    paginaCadastro.typeSenha('12345')
+})
+
+When('informar a confirmação de senha com 5 dígitos', function () {
+    paginaCadastro.typeConfirmaSenha('12345')
+})
 
 Then('o usuário será cadastrado com sucesso', function () {
     cy.get(paginaCadastro.mensagemSucesso).should('contain', 'Sucesso');
@@ -93,4 +114,8 @@ Then('irei visualizar a mensagem de erro {string}', function (mensagem) {
     cy.get(paginaCadastro.mensagemNaoCadastrou).should('contain', mensagem);
     paginaCadastro.clicButtonOk();
 });
+
+Then('o usuário irá verificar a mensagem {string}', function (mensagem) {
+    cy.get(paginaCadastro.labelErroConfSenha).should('contain', mensagem)
+})
 
