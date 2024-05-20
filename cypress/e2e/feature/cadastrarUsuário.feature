@@ -55,8 +55,8 @@
             | nome     |
             | Érik(o)  |
             | Thais*#  |
-            | E#!&x    |
-            | Ursu@    |
+            | E1345    |
+            | ursu@    |
             | LUan(a)  |
             | Wesle(y) |
 
