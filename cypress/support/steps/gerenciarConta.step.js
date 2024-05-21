@@ -86,12 +86,15 @@ Then('terei acesso ao gerenciamento da conta logada e as informações do usuár
     cy.get(paginaGerenciar.labelContaUsuario).should('be.visible');
 })
 
+Then('o usuário vizualizará uma mensagens {string}', function (mensagem) {
+    cy.get(paginaGerenciar.labelCampoConfirmaSenha).should('contain', mensagem)
+})
+
 Then('o usuário vizualizará as mensagens {string}', function (mensagem) {
     cy.get(paginaGerenciar.labelCampoSenha).should('contain', mensagem)
     cy.get(paginaGerenciar.labelCampoConfirmaSenha).should('contain', mensagem)
 })
 
-Then('os campos senha e confirmar senha mostrarão as mensagens obrigatórias')
 
 
 

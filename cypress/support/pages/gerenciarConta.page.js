@@ -17,6 +17,8 @@ export default class GerenciarContaPage {
 
     labelCampoSenha = ':nth-child(5) > .input-error'
     labelCampoConfirmaSenha = ':nth-child(6) > .input-error'
+    labelCampoObrigatório = '.profile-input'
+
 
     typeNome(name) {
         cy.get(this.inputNome).type(name);
