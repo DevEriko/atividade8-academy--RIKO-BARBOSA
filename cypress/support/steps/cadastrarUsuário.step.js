@@ -64,6 +64,11 @@ When('será do tipo 0', function () {
     })
 });
 
+When('logar na conta de um usuário cadastrado', function () {
+    cy.visit("/login");
+
+})
+
 When('não informar um novo nome válido', function () { });
 When('não informar um novo e-mail válido', function () { });
 When('não informar a senha', function () { });

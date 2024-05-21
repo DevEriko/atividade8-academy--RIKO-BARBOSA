@@ -1,29 +1,61 @@
-# language: pt
+            # language: pt
 
-Funcionalidade: Logar usuário no sistema
-Como um usuário com registro no sistema
-Desejo efetuar login para poder gerenciar
-minhas informações ou gerenciar o sistema.
+            Funcionalidade: Logar usuário no sistema
+            Como um usuário com registro no sistema
+            Desejo efetuar login para poder gerenciar
+            minhas informações ou gerenciar o sistema.
 
-@ignore
-Cenário: Deve ser possível logar com e-mail e senha válidos
-Dado que possuo um usuário já cadastrado no sistema
-Quando informar o e-mail
-E a senha
-E confirmar a operação
-Então o usuário será direcionado para página inicial
 
-Cenário: Não deve ser possível logar sem preencher o campo e-mail
-Dado que possuo um usuário já cadastrado no sistema
+            Cenário: Deve ser possível logar com um usuário já cadastrado
+            Dado que possuo um usuário já cadastrado no sistema
+            Quando informar o e-mail
+            E informar a senha
+            E confirmar a operação
+            Então o usuário será direcionado para página inicial
 
-Cenário: Não deve ser possível logar sem preencher o campo senha
-Dado que possuo um usuário já cadastrado no sistema
 
-Esquema do Cenário: Não deve ser possível logar com e-mail inválido
-Dado que possuo um usuário já cadastrado no sistema
+            Cenário: Não deve ser possível logar sem preencher o campo e-mail
+            Dado que estou na página inicial de login
+            Quando não informar o e-mail
+            E informar a senha
+            E confirmar a operação
+            Então o usuário irá ver a mensagem de alerta "Informe o e-mail"
 
-Cenário: Não deve ser possível logar com um usuário não cadastrado
-Dado que não possuo um usuário cadastrado no sistema
+
+            Cenário: Não deve ser possível logar sem preencher o campo senha
+            Dado que estou na página inicial de login
+            Quando informar o e-mail
+            E não informar a senha
+            E confirmar a operação
+            Então o usuário irá ver a mensagem de alerta "Informe a senha"
+
+
+            Cenário: Não deve ser possível logar com um usuário não cadastrado
+            Dado que estou na página inicial de login
+            Quando informar um novo e-mail
+            E informar a senha
+            E confirmar a operação
+            Então o usuário não será logado
+
+
+            Esquema do Cenário: Não deve ser possível logar com um e-mail inválido
+            Dado que estou na página inicial de login
+            Quando informar o e-mail "<email>"
+            E informar a senha
+            E confirmar a operação
+            Então o usuário não será logado
+            Exemplos:
+            | email    |
+            | ema      |
+            | eriko@qa |
+            | @pum     |
+            | @        |
+            | @.com    |
+            | .com     |
+
+
+
+
 
 
 

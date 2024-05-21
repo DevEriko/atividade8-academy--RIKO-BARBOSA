@@ -1,14 +1,12 @@
-export default class LoginPage {
+export default class GerenciarContaPage {
     inputEmail = '[name="email"]'
     inputSenha = '[name="password"]'
-
     buttonLogin = '.login-button'
 
-    labelAlerta = '.input-error'
+    linkPerfil = '[href="/profile"]'
+    linkGerenciarConta = '[href="/account"]'
 
-    labelFalhaAutenticar = '.modal-body > h3'
-    labelInvalido = '.error-message'
-
+    labelAtualizeSuaConta = '.register-account-header > span'
 
     typeEmail(email) {
         cy.get(this.inputEmail).type(email);
@@ -21,5 +19,5 @@ export default class LoginPage {
     clickButtonLogin() {
         cy.get(this.buttonLogin).click();
     }
-}
 
+}
