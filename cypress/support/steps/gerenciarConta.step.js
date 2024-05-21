@@ -5,7 +5,7 @@ const paginaGerenciar = new GerenciarContaPage();
 
 
 Before({ tags: "@NovoUsuario" }, () => {
-    var nome = fakerPT_BR.person.firstName() + " ão";
+    var nome = fakerPT_BR.person.firstName() + "ão";
     var email = fakerPT_BR.internet.email();
     cy.request({
         method: "POST",
@@ -19,11 +19,9 @@ Before({ tags: "@NovoUsuario" }, () => {
 });
 
 Given('que possuo um usuário logado no sistema', function () {
+    cy.visit('/login')
     cy.get('@usuarioCadastrado').then(function (usuario) {
-        cy.visit('/login')
-        let email = usuario.body.email
-        cy.log(usuario)
-        paginaGerenciar.typeEmail(email)
+        paginaGerenciar.typeEmail(usuario.body.email)
         paginaGerenciar.typeSenha('123456')
         paginaGerenciar.clickButtonLogin()
     })
@@ -43,10 +41,57 @@ When('acessar o gerenciamento de contas', function () {
 })
 
 When('editar as informações de nome e senha', function () {
+    cy.get(paginaGerenciar.inputNome).clear();
+    paginaGerenciar.typeNome('José das Coves')
+    paginaGerenciar.clickButtonAlterarSenha();
+    paginaGerenciar.typeSenha('333888')
+    cy.get(paginaGerenciar.inputConfirmaSenha).click();
+    paginaGerenciar.typeConfirmaSenha('333888')
 
 })
 
-Then('terei acesso ao gerenciamento da conta logada', function () {
-    cy.get(paginaGerenciar.labelAtualizeSuaConta).should('contain', 'Atualize informações da sua conta.');
+When('salvar a operação', function () {
+    paginaGerenciar.clickButtonSalvar();
 })
+
+When('editar o nome', function () {
+    cy.get(paginaGerenciar.inputNome).clear();
+    paginaGerenciar.typeNome('#Ranço')
+})
+
+When('editar a senha para uma senha com 5 dígitos', function () {
+    paginaGerenciar.clickButtonAlterarSenha();
+    paginaGerenciar.typeSenha('12345')
+    cy.get(paginaGerenciar.inputConfirmaSenha).click();
+    paginaGerenciar.typeConfirmaSenha('12345')
+})
+
+When('editar o campo senha diferente do campo confirma senha', function () {
+    paginaGerenciar.clickButtonAlterarSenha();
+    paginaGerenciar.typeSenha('123456')
+    cy.get(paginaGerenciar.inputConfirmaSenha).click();
+    paginaGerenciar.typeConfirmaSenha('456789')
+})
+
+When('não preencher os campos senha e confirmar senha', function () {
+    paginaGerenciar.clickButtonAlterarSenha();
+});
+
+Then('os dados serão alterados com sucesso', function () {
+    cy.get(paginaGerenciar.labelSucesso).should('contain', 'Sucesso')
+    cy.get(paginaGerenciar.labelAtualizado).should('contain', 'Informações atualizadas!')
+})
+
+Then('terei acesso ao gerenciamento da conta logada e as informações do usuário', function () {
+    cy.get(paginaGerenciar.labelContaUsuario).should('be.visible');
+})
+
+Then('o usuário vizualizará as mensagens {string}', function (mensagem) {
+    cy.get(paginaGerenciar.labelCampoSenha).should('contain', mensagem)
+    cy.get(paginaGerenciar.labelCampoConfirmaSenha).should('contain', mensagem)
+})
+
+Then('os campos senha e confirmar senha mostrarão as mensagens obrigatórias')
+
+
 
