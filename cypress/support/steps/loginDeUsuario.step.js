@@ -1,29 +1,74 @@
-import { Given, When, Then, before } from '@badeball/cypress-cucumber-preprocessor';
+import { Given, When, Then, Before, After } from '@badeball/cypress-cucumber-preprocessor';
 import LoginPage from '../pages/loginDeUsuario.page';
 import { fakerPT_BR } from "@faker-js/faker";
 const paginaLogin = new LoginPage();
-var email = fakerPT_BR.internet.email();
-var nome = fakerPT_BR.person.firstName() + "ão";
+let token;
+let id;
+let email;
 
-Given('que possuo um usuário já cadastrado no sistema', function () {
+Before({ tags: "@novoUsuario" }, () => {
+    var nameFaker = fakerPT_BR.person.firstName() + "ção";
+    var emailFaker = fakerPT_BR.internet.email();
     cy.request({
         method: "POST",
-        url: 'https://raromdb-3c39614e42d4.herokuapp.com/api/users',
+        url: "https://raromdb-3c39614e42d4.herokuapp.com/api/users",
         body: {
-            name: nome,
-            email: email,
-            password: '123456'
+            name: nameFaker,
+            email: emailFaker,
+            password: "123456",
         },
-    }).as("usuarioCadastrado");
+    })
+        .as("usuarioCadastrado")
+        .then((response) => {
+            id = response.body.id;
+            email = response.body.email;
+        });
+});
+
+After({ tags: "@novoUsuario" }, () => {
+    cy.request({
+        method: "POST",
+        url: "https://raromdb-3c39614e42d4.herokuapp.com/api/auth/login",
+        body: {
+            email: email,
+            password: "123456",
+        },
+    })
+        .as("logarUsuario")
+        .then((response) => {
+            token = response.body.accessToken;
+            cy.request({
+                method: "PATCH",
+                url: "https://raromdb-3c39614e42d4.herokuapp.com/api/users/admin",
+                headers: {
+                    Authorization: "Bearer " + token,
+                },
+            }).as("promoverAdmin");
+        })
+        .then((response) => {
+            cy.request({
+                method: "DELETE",
+                url: "https://raromdb-3c39614e42d4.herokuapp.com/api/users/" + id,
+                headers: {
+                    Authorization: "Bearer " + token,
+                },
+            }).as("deletarUsuario");
+        });
 });
 
 Given('que estou na página inicial de login', function () {
     cy.visit('https://raromdb-frontend-c7d7dc3305a0.herokuapp.com/login')
 })
 
+Given('que possuo um usuário já cadastrado no sistema', function () {
+    cy.get("@usuarioCadastrado");
+});
+
 When('informar o e-mail', function () {
     cy.visit('https://raromdb-frontend-c7d7dc3305a0.herokuapp.com/login')
-    paginaLogin.typeEmail(email)
+    cy.get('@usuarioCadastrado').then(function (dados) {
+        paginaLogin.typeEmail(dados.body.email)
+    })
 
 });
 

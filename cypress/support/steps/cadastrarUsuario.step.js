@@ -1,4 +1,4 @@
-import { Given, When, Then, } from "@badeball/cypress-cucumber-preprocessor";
+import { Given, When, Then, Before, After } from "@badeball/cypress-cucumber-preprocessor";
 import CadastroPage from "../pages/paginaCadastro.page";
 import { fakerPT_BR } from "@faker-js/faker";
 const paginaCadastro = new CadastroPage();

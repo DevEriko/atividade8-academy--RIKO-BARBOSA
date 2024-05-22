@@ -9,6 +9,7 @@ module.exports = defineConfig({
     specPattern: 'cypress/e2e/**/*.feature',
     env: {
       TAGS: 'not @ignore',
+      TAGS: '@novoUsuario',
     },
     async setupNodeEvents(on, config) {
       await addCucumberPreprocessorPlugin(on, config);
