@@ -6,7 +6,6 @@ Como um usuário do sistema
 Desejo poder gerenciar minha conta
 Para ter controle sobreminhas informações
 
-
 Cenário: Deve ser possível como usuário comum vizualizar todas as informações relevantes do usuário quando estiver editando seu perfil.
 Dado que possuo um usuário comum logado no sistema
 Quando selecionar o campo perfil
