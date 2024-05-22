@@ -2,6 +2,9 @@ import { Given, When, Then, Before } from "@badeball/cypress-cucumber-preprocess
 import GerenciarContaPage from "../pages/gerenciarConta.page";
 import { fakerPT_BR } from "@faker-js/faker";
 const paginaGerenciar = new GerenciarContaPage();
+var emailUsuario;
+var tokenUsuario;
+var id;
 
 
 Before({ tags: "@NovoUsuario" }, () => {
@@ -15,16 +18,72 @@ Before({ tags: "@NovoUsuario" }, () => {
             email: email,
             password: "123456",
         },
-    }).as('usuarioCadastrado')
+    }).as('usuarioCadastrado').then((response) => {
+        id = response.body.id;
+        emailUsuario = response.body.email;
+    });
 });
 
-Given('que possuo um usuário logado no sistema', function () {
+Before(function () {
+    cy.visit("/login");
+    cy.get("@usuarioCadastrado").then(function (usuario) {
+        paginaGerenciar.typeEmail(usuario.body.email);
+        paginaGerenciar.typeSenha("123456");
+        paginaGerenciar.clickButtonLogin();
+    });
+});
+
+Given('que possuo um usuário comum logado no sistema', function () {
     cy.visit('/login')
     cy.get('@usuarioCadastrado').then(function (usuario) {
         paginaGerenciar.typeEmail(usuario.body.email)
         paginaGerenciar.typeSenha('123456')
         paginaGerenciar.clickButtonLogin()
     })
+})
+
+Given('que possuo um usuário crítico logado no sistema', function () {
+    cy.request({
+        method: "POST",
+        url: "https://raromdb-3c39614e42d4.herokuapp.com/api/auth/login",
+        body: {
+            email: emailUsuario,
+            password: "123456",
+        },
+    })
+        .as("usuarioLogado")
+        .then((response) => {
+            tokenUsuario = response.body.accessToken;
+            cy.request({
+                method: "PATCH",
+                url: "https://raromdb-3c39614e42d4.herokuapp.com/api/users/apply",
+                headers: {
+                    Authorization: "Bearer " + tokenUsuario,
+                },
+            }).as("usuarioCrítico");
+        });
+})
+
+Given('que possuo um usuário administrador logado no sistema', function () {
+    cy.request({
+        method: "POST",
+        url: "https://raromdb-3c39614e42d4.herokuapp.com/api/auth/login",
+        body: {
+            email: emailUsuario,
+            password: "123456",
+        },
+    })
+        .as("usuarioLogado")
+        .then((response) => {
+            tokenUsuario = response.body.accessToken;
+            cy.request({
+                method: "PATCH",
+                url: "https://raromdb-3c39614e42d4.herokuapp.com/api/users/admin",
+                headers: {
+                    Authorization: "Bearer " + tokenUsuario,
+                },
+            }).as("usuarioAdmin");
+        });
 })
 
 When('selecionar o campo perfil', function () {
