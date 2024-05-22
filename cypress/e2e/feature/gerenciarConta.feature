@@ -9,8 +9,6 @@ Para ter controle sobreminhas informações
 Contexto: Apenas um usuário autenticado pode acessar a edição de informações
 Dado que possuo um usuário logado no sistema
 
-
-
 Cenário: Deve ser possível vizualizar todas as informações relevantes do usuário quando estiver editando seu perfil.
 Quando selecionar o campo perfil
 E selecionar o campo Gerenciar conta

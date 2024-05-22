@@ -1,6 +1,6 @@
             # language: pt
 
-            Funcionalidade: Cadastrar usuário
+            Funcionalidade: Registrar usuário
             Como uma pessoa qualquer
             Desejo me cadastrar no sistema
             Para conseguir avaliar filmes
@@ -54,7 +54,7 @@
             Exemplos:
             | nome     |
             | Érik(o)  |
-            | Thais*#  |
+            | thais*#  |
             | E1345    |
             | ursu@    |
             | LUan(a)  |
@@ -69,6 +69,13 @@ E informar a confirmação de senha
 E confirmar a operação
 Então o usuário será cadastrado com sucesso
 E será do tipo 0
+
+@novoUsuario
+Cenário: Deve ser possível visualizar 3 tipos de usuários: 0 = comum, 1 = admin e 2 = crítico
+Quando acessar a conta de um novo usuário
+E acessar o perfil do usuário
+E acessar a funcionalidade de gerenciar conta
+Então no campo tipo de usuário devem existir as opções de usuários do tipo comun, admin e crítico
 
 
 Cenário: Não deve ser possível cadastrar um usuário sem preencher os campos obrigatórios
@@ -114,6 +121,8 @@ E informar a senha com 5 dígitos
 E informar a confirmação de senha com 5 dígitos
 E confirmar a operação
 Então o usuário irá verificar a mensagem "A senha deve ter pelo menos 6 dígitos."
+
+
 
 
 

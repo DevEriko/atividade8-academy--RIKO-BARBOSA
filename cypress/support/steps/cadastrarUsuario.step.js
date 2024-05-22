@@ -1,7 +1,19 @@
-import { Given, When, Then } from "@badeball/cypress-cucumber-preprocessor";
+import { Given, When, Then, Before, After } from "@badeball/cypress-cucumber-preprocessor";
 import CadastroPage from "../pages/cadastrarUsuario.page";
 import { fakerPT_BR } from "@faker-js/faker";
 const paginaCadastro = new CadastroPage();
+
+Before({ tags: "@usuarioJaCadastrado" }, () => {
+    cy.userExixst().as("postUser");
+});
+
+Before({ tags: "@novoUsuario" }, () => {
+    cy.newUser().as("usuarioCriado");
+});
+
+After({ tags: "@novoUsuario" }, () => {
+    cy.deleteUser();
+});
 
 Given('que acessei a página de cadastro de usuário', function () {
     cy.visit('/register');
@@ -11,6 +23,23 @@ When('informar um novo nome válido', function () {
     const nome = fakerPT_BR.person.firstName();
     cy.wrap(nome).as('nomeValido')
     paginaCadastro.typeNome(nome)
+});
+
+When('acessar a conta de um novo usuário', function () {
+    cy.visit("/login");
+    cy.get("@usuarioCadastrado").then(function (usuario) {
+        paginaCadastro.typeEmailLogin(usuario.body.email);
+        paginaCadastro.typeSenhaLogin("123456");
+        paginaCadastro.clickButtonLogar();
+    });
+});
+
+When('acessar o perfil do usuário', function () {
+    paginaCadastro.clickLinkPerfil();
+});
+
+When('acessar a funcionalidade de gerenciar conta', function () {
+    paginaCadastro.clickLinkGerenciar();
 });
 
 When('informar um novo e-mail válido', function () {
@@ -113,6 +142,15 @@ Then('o usuário não será cadastrado', function () {
     cy.get(paginaCadastro.mensagemFalhaNoCadastro).should('contain', 'Falha no cadastro.');
     cy.get(paginaCadastro.mensagemNaoCadastrou).should('contain', 'Não foi possível cadastrar o usuário.');
 });
+
+Then('no campo tipo de usuário devem existir as opções de usuários do tipo comun, admin e crítico',
+    function () {
+        cy.get(paginaCadastro.tipoUsuario).should("be.visible");
+        cy.get(paginaCadastro.inputTipoUsuário).should("contain", "Comum");
+        cy.get(paginaCadastro.inputTipoUsuário).should("contain", "Administrador");
+        cy.get(paginaCadastro.inputTipoUsuário).should("contain", "Crítico(a)");
+    }
+);
 
 Then('irei visualizar a mensagem de erro {string}', function (mensagem) {
     cy.get(paginaCadastro.mensagemFalhaNoCadastro).should('contain', 'Falha no cadastro.');

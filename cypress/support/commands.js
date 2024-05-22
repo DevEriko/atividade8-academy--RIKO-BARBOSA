@@ -1,6 +1,7 @@
 import { fakerPT_BR } from "@faker-js/faker";
-var namecommands = fakerPT_BR.person.firstName() + "barbie";
-var emailcommands = fakerPT_BR.internet.email();
+var id;
+var email;
+var token;
 
 // ***********************************************
 // This example commands.js shows you how to
@@ -30,13 +31,57 @@ var emailcommands = fakerPT_BR.internet.email();
 
 
 Cypress.Commands.add("newUser", function () {
+    var novoNome = fakerPT_BR.person.firstName() + "ão";
+    var novoEmail = fakerPT_BR.internet.email();
     return cy.request({
         method: "POST",
         url: "https://raromdb-3c39614e42d4.herokuapp.com/api/users",
         body: {
-            name: namecommands,
-            email: emailcommands,
+            name: novoNome,
+            email: novoEmail,
             password: "123456",
+        },
+    }).as('usuarioCadastrado').then(function (response) {
+        id = response.body.id;
+        email = response.body.email;
+    });
+});
+Cypress.Commands.add("deleteUser", function () {
+    cy.request({
+        method: "POST",
+        url: "https://raromdb-3c39614e42d4.herokuapp.com/api/auth/login",
+        body: {
+            email: email,
+            password: "123456",
+        },
+    })
+        .as("logarUsuario")
+        .then((response) => {
+            token = response.body.accessToken;
+            cy.request({
+                method: "PATCH",
+                url: "https://raromdb-3c39614e42d4.herokuapp.com/api/users/admin",
+                headers: {
+                    Authorization: "Bearer " + token,
+                },
+            }).as("promoverAdmin");
+        }).then((response) => {
+            cy.request({
+                method: "DELETE",
+                url: "https://raromdb-3c39614e42d4.herokuapp.com/api/users/" + id,
+                headers: {
+                    Authorization: "Bearer " + token,
+                },
+            }).as("deletarUsuario");
+        });
+});
+
+Cypress.Commands.add("userExixst", function () {
+    cy.intercept("POST", "https://raromdb-3c39614e42d4.herokuapp.com/api/users", {
+        statusCode: 409,
+        body: {
+            message: "Email already in use",
+            error: "Conflict",
         },
     });
 });
