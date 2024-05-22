@@ -1,5 +1,5 @@
-import { Given, When, Then, Before, After } from "@badeball/cypress-cucumber-preprocessor";
-import CadastroPage from "../pages/paginaCadastro.page";
+import { Given, When, Then } from "@badeball/cypress-cucumber-preprocessor";
+import CadastroPage from "../pages/cadastrarUsuario.page";
 import { fakerPT_BR } from "@faker-js/faker";
 const paginaCadastro = new CadastroPage();
 
@@ -123,4 +123,3 @@ Then('irei visualizar a mensagem de erro {string}', function (mensagem) {
 Then('o usuário irá verificar a mensagem {string}', function (mensagem) {
     cy.get(paginaCadastro.labelErroConfSenha).should('contain', mensagem)
 })
-

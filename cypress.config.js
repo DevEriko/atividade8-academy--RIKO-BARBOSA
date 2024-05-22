@@ -8,8 +8,7 @@ module.exports = defineConfig({
     baseUrl: 'https://raromdb-frontend-c7d7dc3305a0.herokuapp.com',
     specPattern: 'cypress/e2e/**/*.feature',
     env: {
-      TAGS: 'not @ignore',
-      TAGS: '@novoUsuario',
+      TAGS: 'not @ignore'
     },
     async setupNodeEvents(on, config) {
       await addCucumberPreprocessorPlugin(on, config);
@@ -18,7 +17,6 @@ module.exports = defineConfig({
         "file:preprocessor",
         createBundler({ plugins: [createEsbuildPlugin(config)] })
       );
-
       return config;
     },
   },

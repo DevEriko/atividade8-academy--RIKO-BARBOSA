@@ -1,6 +1,6 @@
-import { faker } from "@faker-js/faker";
-var namecommands = faker.person.firstName() + " qararo";
-var emailcommands = faker.internet.email();
+import { fakerPT_BR } from "@faker-js/faker";
+var namecommands = fakerPT_BR.person.firstName() + "barbie";
+var emailcommands = fakerPT_BR.internet.email();
 
 // ***********************************************
 // This example commands.js shows you how to
